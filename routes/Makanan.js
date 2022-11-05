@@ -56,6 +56,23 @@ router.get("/:id/foto", async (req, res) => {
   }
 });
 
+router.get("/rekomendasi", async (req, res) => {
+  try {
+    const budget = parseInt(req.query.budget);
+    const hari = parseInt(req.query.hari);
+
+    const rekomendasiPengeluaranPerMakanan = parseInt(budget / (3 * hari));
+
+    const rekomendasiMakanan = (await makananModel.find()).filter(
+      (makanan) => makanan.harga <= rekomendasiPengeluaranPerMakanan
+    );
+
+    res.send({ rekomendasiPengeluaranPerMakanan, rekomendasiMakanan });
+  } catch (error) {
+    res.send(error);
+  }
+});
+
 router.post("/", upload.single("foto"), async (req, res) => {
   try {
     const restoranMakanan = await restoranModel.findById(req.body.restoran);
