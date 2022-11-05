@@ -36,6 +36,22 @@ router.get("/", async (req, res) => {
     res.send(error);
   }
 });
+router.get("/rekomendasi", async (req, res) => {
+  try {
+    const budget = parseInt(req.query.budget);
+    const hari = parseInt(req.query.hari);
+
+    const rekomendasiPengeluaranPerMakanan = parseInt(budget / (3 * hari));
+
+    const rekomendasiMakanan = (await makananModel.find()).filter(
+      (makanan) => makanan.harga <= rekomendasiPengeluaranPerMakanan
+    );
+
+    res.send({ rekomendasiPengeluaranPerMakanan, rekomendasiMakanan });
+  } catch (error) {
+    res.send(error);
+  }
+});
 
 router.get("/:id", async (req, res) => {
   try {
@@ -51,23 +67,6 @@ router.get("/:id/foto", async (req, res) => {
     const post = await makananModel.findById(req.params.id);
     res.contentType("image/jpeg");
     res.send(post.foto);
-  } catch (error) {
-    res.send(error);
-  }
-});
-
-router.get("/rekomendasi", async (req, res) => {
-  try {
-    const budget = parseInt(req.query.budget);
-    const hari = parseInt(req.query.hari);
-
-    const rekomendasiPengeluaranPerMakanan = parseInt(budget / (3 * hari));
-
-    const rekomendasiMakanan = (await makananModel.find()).filter(
-      (makanan) => makanan.harga <= rekomendasiPengeluaranPerMakanan
-    );
-
-    res.send({ rekomendasiPengeluaranPerMakanan, rekomendasiMakanan });
   } catch (error) {
     res.send(error);
   }
