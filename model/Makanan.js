@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
+import { restoranSchema } from "./Restoran.js";
 
 export const makananSchema = mongoose.Schema({
   nama: String,
   harga: Number,
   deskripsi: String,
   foto: { type: Buffer, default: null },
-  restoran: { type: mongoose.Schema.Types.ObjectId, ref: "Restoran" },
+  restoran: restoranSchema,
 });
 
 makananSchema.methods.toJSON = function () {
